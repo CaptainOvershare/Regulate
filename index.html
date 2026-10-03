@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07080b">
+<title>Regulate</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header><div class="brand"><span class="power">⏻</span><div><h1>REGULATE</h1><p>Interrupt · regulate · understand</p></div></div><button id="installBtn" class="ghost hidden">Install</button></header>
+<main>
+<section class="card hero">
+  <div class="eyebrow">Kill Switch</div>
+  <h2>Activation</h2>
+  <div class="gaugeWrap">
+    <svg viewBox="0 0 360 250" aria-label="Activation gauge">
+      <defs><linearGradient id="arc" x1="0" x2="1"><stop offset="0" stop-color="#2f8dff"/><stop offset=".48" stop-color="#7957ff"/><stop offset=".74" stop-color="#c62055"/><stop offset="1" stop-color="#ff2028"/></linearGradient></defs>
+      <path class="track" d="M48 205 A135 135 0 1 1 312 205" pathLength="100"/>
+      <path class="arc" d="M48 205 A135 135 0 1 1 312 205" pathLength="100"/>
+      <g id="ticks"></g>
+      <line id="needle" x1="180" y1="194" x2="180" y2="76"/>
+      <circle class="hub" cx="180" cy="194" r="10"/>
+      <text id="quickValue" x="180" y="167" text-anchor="middle">5.0</text>
+    </svg>
+  </div>
+  <input id="quick" class="slider" type="range" min="0" max="10" step=".1" value="5" aria-label="Current activation">
+  <button id="killOpen" class="killButton" aria-label="Open Kill Switch">⏻</button>
+</section>
+
+<section class="card">
+  <div class="sectionHead"><div><div class="eyebrow">Record</div><h2>Reaction</h2></div><button id="nowBtn" class="ghost">Now</button></div>
+  <form id="form">
+    <div class="grid2">
+      <label>Date & time<input id="when" type="datetime-local" required></label>
+      <label>Source<select id="source"><option>In person</option><option>Text</option><option>Phone</option><option>Email</option><option>Work</option><option>Other</option></select></label>
+    </div>
+    <div class="grid2">
+      <label>Sleep before this<input id="sleep" type="number" min="0" max="24" step=".25" placeholder="0–24"></label>
+      <label>Initial activation<div class="rangeRow"><input id="intensity" type="range" min="0" max="10" step="1" value="5"><output id="intensityOut">5</output></div></label>
+    </div>
+    <label>Trigger / context<textarea id="trigger" rows="2" placeholder="Short and factual"></textarea></label>
+    <fieldset><legend>What did I actually do?</legend><div id="reactions" class="chips">
+      <label><input type="checkbox" value="Stayed calm"><span>Stayed calm</span></label>
+      <label><input type="checkbox" value="Paused / disengaged"><span>Paused / disengaged</span></label>
+      <label><input type="checkbox" value="Explained / over-explained"><span>Explained / over-explained</span></label>
+      <label><input type="checkbox" value="Raised voice"><span>Raised voice</span></label>
+      <label><input type="checkbox" value="Yelled"><span>Yelled</span></label>
+      <label><input type="checkbox" value="Shut down"><span>Shut down</span></label>
+      <label><input type="checkbox" value="Left the space"><span>Left the space</span></label>
+      <label><input type="checkbox" value="Repeated texts"><span>Repeated texts</span></label>
+      <label><input type="checkbox" value="Cutting words"><span>Cutting words</span></label>
+      <label><input type="checkbox" value="Other"><span>Other</span></label>
+    </div></fieldset>
+    <label>Body cues<input id="body" placeholder="Chills, tunnel vision, shaking…"></label>
+    <div class="grid2">
+      <label>Recovery<select id="recovery"><option value="">Still activated / not sure</option><option>Under 5 min</option><option>5–15 min</option><option>15–30 min</option><option>30–60 min</option><option>1–3 hours</option><option>3+ hours</option><option>Into next day</option></select></label>
+      <label>What helped most?<select id="helped"><option value="">Not sure</option><option>Kill Switch</option><option>Space / distance</option><option>Walk / outside</option><option>Talking to someone</option><option>Music</option><option>Work / task focus</option><option>Nothing yet</option><option>Other</option></select></label>
+    </div>
+    <div id="regBadge" class="badge hidden"></div>
+    <div class="actions"><button class="primary" type="submit">Save</button><button id="clearForm" class="ghost" type="button">Clear</button></div>
+    <p id="status" class="muted"></p>
+  </form>
+</section>
+
+<section class="card"><div class="sectionHead"><div><div class="eyebrow">Patterns</div><h2>Snapshot</h2></div><select id="window"><option value="7">7 days</option><option value="30">30 days</option><option value="all">All</option></select></div><div id="stats" class="stats"></div><svg id="trend" viewBox="0 0 640 180" class="trend"></svg></section>
+
+<section class="card"><div class="sectionHead"><div><div class="eyebrow">History</div><h2>Events</h2></div><input id="search" type="search" placeholder="Search"></div><div id="history"></div></section>
+
+<section class="card"><div class="eyebrow">Private by default</div><h2>Data</h2><p class="muted">Stored in this browser on this device unless you export it.</p><div class="actions wrap"><button id="csv" class="ghost">Export CSV</button><button id="json" class="ghost">Backup JSON</button><label class="ghost file">Import JSON<input id="importer" type="file" accept="application/json"></label><button id="deleteAll" class="danger">Delete all</button></div></section>
+</main>
+
+<dialog id="killDialog">
+  <div class="killShell">
+    <button id="killClose" class="x">×</button>
+    <div id="killMain">
+      <div class="bigGauge" id="bigGauge">
+        <svg viewBox="0 0 420 350">
+          <defs><linearGradient id="arc2" x1="0" x2="1"><stop offset="0" stop-color="#2f8dff"/><stop offset=".48" stop-color="#7957ff"/><stop offset=".74" stop-color="#c62055"/><stop offset="1" stop-color="#ff2028"/></linearGradient></defs>
+          <path class="track" d="M55 275 A160 160 0 1 1 365 275" pathLength="100"/>
+          <path class="arc2" d="M55 275 A160 160 0 1 1 365 275" pathLength="100"/>
+          <g id="ticks2"></g>
+          <line id="needle2" x1="210" y1="262" x2="210" y2="98"/>
+          <circle class="hub" cx="210" cy="262" r="12"/>
+          <text id="killValue" x="210" y="222" text-anchor="middle">8.0</text>
+        </svg>
+      </div>
+      <button id="hold" class="holdButton" aria-label="Hold to regulate">⏻</button>
+      <div class="cycleDots" id="cycleDots"></div>
+    </div>
+    <div id="after" class="hidden after">
+      <div class="afterNumber"><span id="beforeNum">8.0</span><span>→</span><span id="afterNum">5.0</span></div>
+      <input id="afterRange" class="slider" type="range" min="0" max="10" step=".1" value="5">
+      <div class="actions"><button id="again" class="ghost">Again</button><button id="done" class="primary">Done</button></div>
+    </div>
+  </div>
+</dialog>
+
+<script src="app.js"></script>
+</body></html>
